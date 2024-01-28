@@ -1,0 +1,23 @@
+integrations:
+  gitea:
+    - host: localhost:3000
+      password: "4ce425692b1447959d251ec40f036d14b2abc694"
+  gitlab: 
+    - host: localhost:3000
+      token: 4ce425692b1447959d251ec40f036d14b2abc694
+      apiBaseUrl: localhost:3000
+auth:
+  environment: development
+  providers:
+    github:
+      development:
+        clientId: ""
+        clientSecret: ""
+        enterpriseInstanceUrl: http://localhost:3000
+        icon: https://avatars.githubusercontent.com/u/22138497?s=200&v=4
+        scope:
+          - user:email
+backend:
+  auth:
+    keys:
+    - secret: "1232345"

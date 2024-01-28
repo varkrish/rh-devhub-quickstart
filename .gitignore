@@ -1,0 +1,4 @@
+gitea
+.accesstoken
+.oauthapp_info_json
+auth-config.yaml
