@@ -51,7 +51,7 @@ services:
     entrypoint: ["/usr/src/app/packages/app-config/start_dev_hub.sh"]
     userns_mode: keep-id:uid=1001
     extra_hosts:
-      - "gitea:localhost"
+      - "gitea:127.0.0.1"
     environment:
       - PORT=3001
       - APP_CONFIG=/usr/src/app/packages/app-config/app-config.yaml
