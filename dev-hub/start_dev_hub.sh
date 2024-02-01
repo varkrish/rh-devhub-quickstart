@@ -16,8 +16,8 @@ export_random_env_variables() {
   export GITHUB_ORG=$(generate_random_uuid)
   
   # GitLab
-  export GITLAB_HOST="http://localhost:3000/"
-  export GITLAB_TOKEN=$(head -1 /usr/src/app/packages/app-config/.accesstoken)
+  # export GITLAB_HOST="http://localhost:3000/"
+  # export GITLAB_TOKEN=$(head -1 /usr/src/app/packages/app-config/.accesstoken)
 
   # Kubernetes
   export K8S_CLUSTER_NAME=$(generate_random_uuid)
