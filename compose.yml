@@ -5,13 +5,15 @@ services:
     image: registry.access.redhat.com/rhdh/rhdh-hub-rhel9:latest
     container_name: developer-hub
     entrypoint: ["/usr/src/app/packages/app-config/start_dev_hub.sh"]
-    userns_mode: keep-id:uid=1001
+    #Enable the below line for Mac users
+    #userns_mode: keep-id:uid=1001
     environment:
       - PORT=3001
       - APP_CONFIG=/usr/src/app/packages/app-config/app-config.yaml
       - NODE_TLS_REJECT_UNAUTHORIZED='0'
     volumes:
-      - ./dev-hub:/usr/src/app/packages/app-config
+      - ./dev-hub:/usr/src/app/packages/app-config:z
+        #Remove :z bind option for non SELinux machines
     ports:
       - "7007:7007"
 

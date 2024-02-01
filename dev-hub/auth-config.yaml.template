@@ -1,11 +1,10 @@
+# Create a new file called auth-config.yaml by cloning this file and 
+# update the secrets. 
 integrations:
-  gitea:
-    - host: localhost:3000
-      password: "4ce425692b1447959d251ec40f036d14b2abc694"
   gitlab: 
-    - host: localhost:3000
-      token: 4ce425692b1447959d251ec40f036d14b2abc694
-      apiBaseUrl: localhost:3000
+    - host: gitlab.com
+      token: 
+      #apiBaseUrl: localhost:3000
 auth:
   environment: development
   providers:
@@ -17,7 +16,14 @@ auth:
         icon: https://avatars.githubusercontent.com/u/22138497?s=200&v=4
         scope:
           - user:email
+    gitlab:
+      development:
+        clientId: ""
+        clientSecret: ""
+        scope: read_user
+        #audience: http://localhost:8000
 backend:
   auth:
     keys:
     - secret: "1232345"
+signInPage: gitlab #Change to github if we are using github

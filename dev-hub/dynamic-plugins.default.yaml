@@ -92,7 +92,7 @@ plugins:
                     allOf:
                       - isGithubPullRequestsAvailable
   - package: ./dynamic-plugins/dist/roadiehq-backstage-plugin-security-insights
-    disabled: true
+    disabled: false
     pluginConfig:
       dynamicPlugins:
         frontend:
@@ -112,13 +112,13 @@ plugins:
 
   # Group: Gitlab
   - package: ./dynamic-plugins/dist/immobiliarelabs-backstage-plugin-gitlab-backend-dynamic
-    disabled: true
+    disabled: false
     pluginConfig:
       gitlab:
         host: ${GITLAB_HOST}
         token: ${GITLAB_TOKEN}
   - package: ./dynamic-plugins/dist/immobiliarelabs-backstage-plugin-gitlab
-    disabled: true
+    disabled: false
     pluginConfig:
       dynamicPlugins:
         frontend:
@@ -160,13 +160,13 @@ plugins:
                     allOf:
                       - isGitlabAvailable
   - package: ./dynamic-plugins/dist/backstage-plugin-catalog-backend-module-gitlab-dynamic
-    disabled: true
+    disabled: false
     pluginConfig:
       catalog:
         providers:
           gitlab: {}
   - package: ./dynamic-plugins/dist/backstage-plugin-scaffolder-backend-module-gitlab-dynamic
-    disabled: true
+    disabled: false
 
   # Group: Kubernetes
   - package: ./dynamic-plugins/dist/backstage-plugin-kubernetes-backend-dynamic
