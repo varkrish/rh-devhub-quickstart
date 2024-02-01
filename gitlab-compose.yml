@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  developer-hub:
+    image: registry.access.redhat.com/rhdh/rhdh-hub-rhel9:latest
+    container_name: developer-hub
+    entrypoint: ["/usr/src/app/packages/app-config/start_dev_hub.sh"]
+    userns_mode: keep-id:uid=1001
+    environment:
+      - PORT=3001
+      - APP_CONFIG=/usr/src/app/packages/app-config/app-config.yaml
+      - NODE_TLS_REJECT_UNAUTHORIZED='0'
+    volumes:
+      - ./dev-hub:/usr/src/app/packages/app-config
+    ports:
+      - "7007:7007"
+
+  gitlab:
+    image: docker.io/gitlab/gitlab-ce:latest
+    container_name: gitlab
+    restart: always
+    ports: 
+      - "8000:80"
+      - "9000:22"
+      - "9090:9090"
+    environment:
+      GITLAB_ROOT_PASSWORD: "rhdevhub"
+      GITLAB_OMNIBUS_CONFIG2: |
+        letsencrypt['enable'] = false
+        gitlab_rails['omniauth_enabled'] = false
+        gitlab_rails['omniauth_allow_single_sign_on'] = ['saml']
+        gitlab_rails['omniauth_block_auto_created_users'] = false
+        gitlab_rails['omniauth_auto_link_saml_user'] = true
+        nginx['client_max_body_size'] = '400m'
+        gitlab_rails['registry_enabled'] = false
+        gitlab_rails['registry_path'] = "/var/opt/gitlab/gitlab-rails/shared/registry"
+        gitlab_rails['gitlab_default_projects_features_container_registry']= false
+        gitlab_pages['inplace_chroot'] = true
+    volumes:
+      - config:/etc/gitlab
+      - log:/var/log/gitlab
+      - data:/var/opt/gitlab
+      - registry:/var/opt/gitlab/gitlab-rails/shared/registry
+      - ssl:/etc/gitlab/ssl
+
+volumes:
+  config:
+  data:
+  log:
+  registry:
+  ssl:

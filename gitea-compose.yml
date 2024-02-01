@@ -1,0 +1,69 @@
+version: '3.8'
+services:
+  gitea:
+    image: gitea/gitea:1.21.3-rootless
+    container_name: gitea
+    userns_mode: keep-id:uid=1000
+    command: >
+      /bin/bash -c '
+      /scripts/gitea-customentrypoint.sh 
+      '
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - RHDEVHUBUSER=rhdevhub
+      - RHDEVHUBPWD=rhdevhub
+    volumes:
+      - gitea-data:/var/lib/
+      - ./dev-hub:/scripts:rw
+      - ./dev-hub/app.ini:/etc/gitea/app.ini
+    ports:
+      - "3000:3000"
+      - "2222:22"  # SSH port
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  gitea-initializer:
+    image: docker.io/alpine/k8s:1.25.16
+    container_name: gitea-initializer
+    environment:
+      - RHDEVHUBUSER=rhdevhub
+      - RHDEVHUBPWD=rhdevhub
+      - GITEA_URL="http://gitea:3000"
+    command: >
+      /bin/bash -c '
+      /scripts/setup-gitea.sh 
+      '
+    volumes:
+      - gitea-data:/var/lib/gitea/data
+      - ./dev-hub:/scripts
+    depends_on:
+      gitea:
+        condition: service_healthy
+
+  developer-hub:
+    image: registry.access.redhat.com/rhdh/rhdh-hub-rhel9:latest
+    container_name: developer-hub
+    entrypoint: ["/usr/src/app/packages/app-config/start_dev_hub.sh"]
+    userns_mode: keep-id:uid=1001
+    # extra_hosts:
+    #   - "gitea:localhost"
+    environment:
+      - PORT=3001
+      - APP_CONFIG=/usr/src/app/packages/app-config/app-config.yaml
+      - NODE_TLS_REJECT_UNAUTHORIZED='0'
+    volumes:
+      - ./dev-hub:/usr/src/app/packages/app-config
+    ports:
+      - "7007:7007"
+    depends_on:
+      gitea:
+        condition: service_healthy
+      gitea-initializer:
+        condition: service_completed_successfully
+volumes:
+  gitea-data:
+  backstage-data:
